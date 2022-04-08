@@ -15,22 +15,23 @@ KEYS = (
     'B'
 )
 
-def RandomKeyValue():
-    return KEYS[random.randint(0, len(KEYS))]
+# def RandomKeyValue():
+#     return KEYS[random.randint(0, len(KEYS))]
 
 class KeyClass(object):
 
     def __init__(self, key=None):
-        if key is None or key == 'Random':
-            key = self.set_random()
+        if key is None or str(key).lower() == 'random':
+            key = self.random()
         else:
+            key = str(key).upper()
             if key not in KEYS:
                 raise ValueError('Wrong music key')
-            self.key = key
+            else:
+                self.key = key
 
-    def set_random(self):
-        self.key = RandomKeyValue()
-        return self.key
+    def random(self):
+        return KEYS[random.randint(0, len(KEYS))]
 
-def Random():
-    return KeyClass()
+# def Random():
+#     return KeyClass()

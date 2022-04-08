@@ -1,5 +1,4 @@
 import Key
-import Mood
 
 class SongClass(object):
     def __init__(self):
