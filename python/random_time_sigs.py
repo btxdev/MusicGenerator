@@ -3,7 +3,7 @@ import random
 
 s = Session(tempo=140)
 
-drums = s.new_midi_part("drums", 2)
+drums = s.new_midi_part("drums", 1)
 
 def play_hi_hat(x,hat):
     for _ in range(x):
