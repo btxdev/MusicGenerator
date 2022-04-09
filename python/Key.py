@@ -19,19 +19,24 @@ def note(key, octave):
     return int((octave * 12) + KEYS.index(key))
 
 def random_key():
-    return KEYS[random.randint(0, len(KEYS))]
+    return random.choice(KEYS)
 
-# class KeyClass(object):
+class KeyClass(object):
 
-#     def __init__(self, key=None):
-#         if key is None or str(key).lower() == 'random':
-#             key = self.random()
-#         else:
-#             key = str(key).upper()
-#             if key not in KEYS:
-#                 raise ValueError('Wrong music key')
-#             else:
-#                 self.key = key
+    def __init__(self, key=None):
+        if key is None or str(key).lower() == 'random':
+            key = self.random()
+        else:
+            key = str(key).upper()
+            if key not in KEYS:
+                raise ValueError('Wrong music key')
+            else:
+                self.key = key
 
-#     def random(self):
-#         return KEYS[random.randint(0, len(KEYS))]
+    def random(self):
+        key = random_key()
+        self.key = random_key()
+        return key
+
+    def note(self, octave):
+        return note(self.key, octave)

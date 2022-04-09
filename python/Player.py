@@ -15,8 +15,8 @@ class PlayerClass(object):
         channel = self.session.new_midi_part(name, self.ch_id(len(self.channels)))
         self.channels[name] = channel
 
-    def channel(self, name):
-        return self.channels[name]
+    # def channel(self, name):
+    #     return self.channels[name]
 
     def _play_song_f(self, song, channel_name):
         for note in song:
@@ -26,7 +26,8 @@ class PlayerClass(object):
             if pitch == 0:
                 wait(duration)
             else:
-                self.channel(channel_name).play_note(pitch, volume, duration)
+                channel = self.channels[channel_name]
+                channel.play_note(pitch, volume, duration)
         
     def play(self, song, channel_name):
         self.session.fork(self._play_song_f(song, channel_name))

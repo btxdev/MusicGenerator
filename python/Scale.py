@@ -55,4 +55,4 @@ SCALES = {
 }
 
 def random_scale():
-    return SCALES[random.randint(0, len(SCALES))]
+    return SCALES[random.randint(0, len(SCALES)-1)]
