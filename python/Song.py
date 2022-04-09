@@ -10,7 +10,7 @@ class SongClass(object):
         self.mood_sadness = 0.5
         self.mood_epic = 0.5
 
-        self.base_key = Key.Random()
+        self.base_key = Key.random_key()
         self.melodic_complexity = 0.5
         self.melodic_novelty = 0.5
 

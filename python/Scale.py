@@ -1,3 +1,4 @@
+import random
 import Key
 
 class ScaleClass(object):
@@ -28,36 +29,30 @@ class ScaleClass(object):
                 i = 0
 
 SCALES = {
-    'major': ScaleClass('major', ('C','D','E','F','G','A','B'), 0.5),
-    'pentatonic_major': ScaleClass('pentatonic_major', ('C','D','E','G','A'), 0.5),
+    'major': ScaleClass('major', ('C','D','E','F','G','A','B'), 0),
+    'pentatonic_major': ScaleClass('pentatonic_major', ('C','D','E','G','A'), 0.1),
     'blues_major': ScaleClass('blues_major', ('C','D#','F','F#','G','A'), 0.5),
-    'minor': ScaleClass('minor', ('C','D','D#','F','G','G#','A#'), 0.5),
-    'melodic_minor': ScaleClass('melodic_minor', ('C','D','D#','F','G','A','B'), 0.5),
-    'harmonic_minor': ScaleClass('harmonic_minor', ('C','D','D#','F','G','G#','B'), 0.5),
-    'pentatonic_minor': ScaleClass('pentatonic_minor', ('C','D#','F','G','A#'), 0.5),
-    'blues_minor': ScaleClass('blues_minor', ('C','D#','F','F#','G','A#'), 0.5),
-    'chromatic': ScaleClass('chromatic', ('C','C#','D','D#','E','F','F#','G','G#','A','A#','B'), 0.5),
-    'spanish': ScaleClass('spanish', ('C','C#','E','F','G','G#','A#'), 0.5),
-    'jewish': ScaleClass('jewish', ('C','C#','E','F','G','G#','A#'), 0.5),
-    'ionian': ScaleClass('ionian', ('C','D','E','F','G','A','B'), 0.5),
-    'dorian': ScaleClass('dorian', ('C','D','D#','F','G','A','A#'), 0.5),
-    'phrygian': ScaleClass('phrygian', ('C','C#','D#','F','G','G#','A#'), 0.5),
-    'lydian': ScaleClass('kumlydianoi', ('C','D','E','F#','G','A','B'), 0.5),
-    'mixolydian': ScaleClass('mixolydian', ('C','D','E','F','G','A','A#'), 0.5),
+    'minor': ScaleClass('minor', ('C','D','D#','F','G','G#','A#'), 0.2),
+    'melodic_minor': ScaleClass('melodic_minor', ('C','D','D#','F','G','A','B'), 0.2),
+    'harmonic_minor': ScaleClass('harmonic_minor', ('C','D','D#','F','G','G#','B'), 0.4),
+    'pentatonic_minor': ScaleClass('pentatonic_minor', ('C','D#','F','G','A#'), 0.1),
+    'blues_minor': ScaleClass('blues_minor', ('C','D#','F','F#','G','A#'), 0.3),
+    'chromatic': ScaleClass('chromatic', ('C','C#','D','D#','E','F','F#','G','G#','A','A#','B'), 1),
+    'spanish': ScaleClass('spanish', ('C','C#','E','F','G','G#','A#'), 0.6),
+    'jewish': ScaleClass('jewish', ('C','C#','E','F','G','G#','A#'), 0.7),
+    'ionian': ScaleClass('ionian', ('C','D','E','F','G','A','B'), 0.3),
+    'dorian': ScaleClass('dorian', ('C','D','D#','F','G','A','A#'), 0.3),
+    'phrygian': ScaleClass('phrygian', ('C','C#','D#','F','G','G#','A#'), 0.6),
+    'lydian': ScaleClass('lydian', ('C','D','E','F#','G','A','B'), 0.5),
+    'mixolydian': ScaleClass('mixolydian', ('C','D','E','F','G','A','A#'), 0.4),
     'aeolian': ScaleClass('aeolian', ('C','D','D#','F','G','G#','A#'), 0.5),
     'locrian': ScaleClass('locrian', ('C','C#','D#','F','F#','G#','A#'), 0.5),
-    'jazz_minor': ScaleClass('jazz_minor', ('C','D','D#','F','G','A','B'), 0.5),
-    'major_arpeggio': ScaleClass('major_arpeggio', ('C','E','G'), 0.5),
-    'minor_arpeggio': ScaleClass('minor_arpeggio', ('C','D#','G'), 0.5),
-    'augmented_arpeggio': ScaleClass('augmented_arpeggio', ('C','E','G#'), 0.5),
-    'diminished_arpeggio': ScaleClass('diminished_arpeggio', ('C','D#','F#','A'), 0.5)
+    'jazz_minor': ScaleClass('jazz_minor', ('C','D','D#','F','G','A','B'), 0.3),
+    'major_arpeggio': ScaleClass('major_arpeggio', ('C','E','G'), 0.1),
+    'minor_arpeggio': ScaleClass('minor_arpeggio', ('C','D#','G'), 0.4),
+    'augmented_arpeggio': ScaleClass('augmented_arpeggio', ('C','E','G#'), 0.8),
+    'diminished_arpeggio': ScaleClass('diminished_arpeggio', ('C','D#','F#','A'), 0.9)
 }
 
-if __name__ == '__main__':
-    print(SCALES['minor_arpeggio'].get_note(1, 1))
-    print(SCALES['minor_arpeggio'].get_note(1, 3))
-    print(SCALES['minor_arpeggio'].get_note(1, 5))
-    print(SCALES['minor_arpeggio'].get_note(1, 7))
-    print(SCALES['minor_arpeggio'].get_note(1, 8))
-    print(SCALES['minor_arpeggio'].get_note(1, 10))
-    print(SCALES['minor_arpeggio'].get_note(1, 12))
+def random_scale():
+    return SCALES[random.randint(0, len(SCALES))]
