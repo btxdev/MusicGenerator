@@ -1,5 +1,7 @@
 import random
 
+import Utils
+
 KEYS = (
     'C',
     'C#',
@@ -14,9 +16,6 @@ KEYS = (
     'A#',
     'B'
 )
-
-def note(key, octave):
-    return int((octave * 12) + KEYS.index(key))
 
 def random_key():
     return random.choice(KEYS)
@@ -39,4 +38,4 @@ class KeyClass(object):
         return key
 
     def note(self, octave):
-        return note(self.key, octave)
+        return Utils.get_pitch_from_values(self.key, octave)
