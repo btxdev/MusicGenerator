@@ -1,6 +1,7 @@
 import random
 import sys
 
+from pathlib import Path
 from scamp import *
 
 import classes.utils as utils
@@ -9,6 +10,11 @@ from classes.player import Player
 from classes.note import Note
 from classes.scale import SCALES
 from classes.scale import Scale
+from python.classes.midi import CreateMidiFile
+
+DEBUG = False
+SCRIPT_DIR = Path(__file__).parent.resolve()
+MIDI_OUTPUT_PATH = Path(SCRIPT_DIR, '../midi/')
 
 def pause_note(duration):
     return (0, duration, 0)
@@ -54,10 +60,15 @@ def generate_guitar(tabs):
             tabs.paste(Note(utils.NOTE_VALUES['4'], utils.pitch_from_values('F', 4), 1), pos)
     return tabs
 
+def tablature_to_midi(tablature, tempo, midi, channel):
+    for note, time in tablature.get_notes(tempo):
+        midi.add_note(channel, note, time)
+
 if __name__ == '__main__':
 
-    scale = SCALES['jewish']
     key = 'B'
+    tempo = 120
+    scale = SCALES['jewish']
     key_note = utils.pitch_from_values(key, octave=2)
 
     drum_tabs = Tablature(tacts=8, precision=16)
@@ -66,13 +77,17 @@ if __name__ == '__main__':
     drum_tabs = generate_drums(drum_tabs)
     guitar_tabs = generate_guitar(guitar_tabs)
 
-    #drum_tabs.print()
+    if DEBUG:
+        drum_tabs.print()
 
-    player = Player(140)
+    # create midi files
+    drum_midi = CreateMidiFile('Drums', tempo)
+    guitar_midi = CreateMidiFile('Guitar', tempo)
 
-    player.create_channel('drums')
-    player.create_channel('guitar')
+    # paste tablature
+    tablature_to_midi(drum_tabs, tempo, drum_midi, 0)
+    tablature_to_midi(guitar_tabs, tempo, drum_midi, 1)
 
-    player.play(drum_tabs, 'drums')
-    player.play(guitar_tabs, 'guitar')
-    player.sync()
+    # save files
+    drum_midi.save(MIDI_OUTPUT_PATH)
+    guitar_midi.save(MIDI_OUTPUT_PATH)

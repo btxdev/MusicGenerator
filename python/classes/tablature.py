@@ -26,16 +26,20 @@ class Tablature():
         # delete pause
         if note_object.is_pause or (len(self.tabs[position]) == 1 and self.tabs[position][0].is_pause):
             self.tabs[position].clear()
-        # else:
-        #     # delete pause
-        #     if len(self.tabs[position]) == 1:
-
-        # for i in range(0, len(self.tabs)):
-        #     for j in range(0, len(self.tabs[i]), -1):
-        #         if self.tabs[i][j].is_pause:
-        #             self.tabs[i][j].remove
 
         self.tabs[position].append(note_object)
+
+    def get_notes(self, tempo):
+        output = []
+        beats_per_second = tempo / 60
+        beat_duration = 1 / beats_per_second
+        tact_duration = beat_duration * 4
+        quant_duration = tact_duration / self.precision
+        for i in range(self.tabs):
+            for note in self.tabs[i]:
+                if not note.is_pause:
+                    time = i * quant_duration
+                    output += (note, time)
 
     def print(self):
         for notes in self.tabs:
