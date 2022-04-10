@@ -1,6 +1,6 @@
 from scamp import *
 
-class PlayerClass(object):
+class Player(object):
 
     def __init__(self, tempo=None):
         if tempo is None:
@@ -17,7 +17,7 @@ class PlayerClass(object):
 
     def _play_song_f(self, tabs, channel_name):
         channel = self.channels[channel_name]
-        for notes in tabs:
+        for notes in tabs.tabs:
             if len(notes) > 1:
                 # chord
                 pitches = []

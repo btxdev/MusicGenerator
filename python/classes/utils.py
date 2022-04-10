@@ -1,3 +1,5 @@
+import random
+
 KEYS = (
     'C',
     'C#',
@@ -14,23 +16,23 @@ KEYS = (
 )
 
 NOTE_VALUES = {
-    '4': 4,
-    '2': 2,
-    '1': 1,
+    'x4': 4,
+    'x2': 2,
+    '4': 1,
     '8': 0.5,
     '16': 0.25,
     '32': 0.125,
     '64': 0.0625,
-    '4.': 6,
-    '2.': 3,
-    '1.': 1.5,
+    'x4.': 6,
+    'x2.': 3,
+    '4.': 1.5,
     '8.': 0.75,
     '16.': 0.375,
     '32.': 0.1875,
     '64.': 0.09375,
-    '4t': 2.6666666,
-    '2t': 1.3333333,
-    '1t': 0.6666666,
+    'x4t': 2.6666666,
+    'x2t': 1.3333333,
+    '4t': 0.6666666,
     '8t': 0.3333333,
     '16t': 0.1666666,
     '32t': 0.0833333,
@@ -55,13 +57,25 @@ DRUMS = {
     'SPLASH': 55
 }
 
-def get_pitch_from_values(key, octave):
+def pitch_from_values(key, octave):
     return int((octave * 12) + KEYS.index(key))
 
-def get_pitch_from_str(str_note):
+def pitch_from_str(str_note):
     octave = int(str_note[-1:])
     key = str_note[:-1].upper()
-    return get_pitch_from_values(key, octave)
+    return pitch_from_values(key, octave)
 
-def get_note_value_from_str(value_str):
+def note_value_from_str(value_str):
     return NOTE_VALUES[value_str]
+
+def random_key():
+    return random.choice(KEYS)
+
+def random_note_value(type='any', min=0, max=-1):
+    if type == 'dotted':
+        values = NOTE_VALUES[7:13]
+    elif type == 'triplet':
+        values = NOTE_VALUES[14:]
+    else:
+        values = NOTE_VALUES[:6]
+    return random.choice(values[min:max])

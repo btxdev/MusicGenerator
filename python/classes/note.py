@@ -1,14 +1,14 @@
-import Utils
+import classes.utils as utils
 
 class Note():
 
     def __init__(self, note_value, pitch=None, volume=None):
 
         if pitch is not None and type(pitch) is str:
-            pitch = Utils.get_pitch_from_str(pitch)
+            pitch = utils.get_pitch_from_str(pitch)
 
         if note_value is not None and type(note_value) is str:
-            note_value = Utils.get_note_value_from_str(note_value)
+            note_value = utils.get_note_value_from_str(note_value)
 
         if pitch is None:
             self._midi_data_block = (0, note_value, 0)
@@ -22,7 +22,7 @@ class Note():
     @pitch.setter
     def pitch(self, new_pitch):
         if type(new_pitch) is str:
-            new_pitch = Utils.get_pitch_from_str(new_pitch)
+            new_pitch = utils.get_pitch_from_str(new_pitch)
         self._midi_data_block[0] = int(new_pitch)
 
     @property
@@ -40,5 +40,9 @@ class Note():
     @value.setter
     def value(self, new_value):
         if type(new_value) is str:
-            new_value = Utils.get_note_value_from_str(new_value)
+            new_value = utils.get_note_value_from_str(new_value)
         self._midi_data_block[1] = int(new_value)
+
+    @property
+    def is_pause(self):
+        return (self.pitch == 0)

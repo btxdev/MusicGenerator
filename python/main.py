@@ -1,8 +1,14 @@
-import Player
-import Scale
-import Key
-import MelodicPattern
 import random
+import sys
+
+from scamp import *
+
+import classes.utils as utils
+from classes.tablature import Tablature
+from classes.player import Player
+from classes.note import Note
+from classes.scale import SCALES
+from classes.scale import Scale
 
 def pause_note(duration):
     return (0, duration, 0)
@@ -30,71 +36,43 @@ def use_pattern(scale, key_note, pattern, pattern_shift=0):
         melody.append(pause_note(pause))
     return melody
 
-def use_shred(scale, key_note):
-    melody = []
-    pattern1 = random.choice(MelodicPattern.PATTERNS_4)
-    pattern2 = random.choice(MelodicPattern.PATTERNS_4)
-    melody1 = use_pattern(scale, key_note, pattern1, pattern_shift=0)
-    melody2 = use_pattern(scale, key_note, pattern1, pattern_shift=-1)
-    melody3 = use_pattern(scale, key_note, pattern2, pattern_shift=0)
-    melody4 = use_pattern(scale, key_note, pattern1, pattern_shift=2)
-    melody = melody_in(melody, melody1)
-    melody = melody_in(melody, melody2)
-    melody = melody_in(melody, melody3)
-    melody = melody_in(melody, melody4)
-    return melody
+def generate_drums(tabs):
+    # cymbals
+    every_beat = tabs.precision // 4
+    for tact in range(tabs.tacts):
+        for beat in range(0, tabs.precision, every_beat):
+            pos = (tact * tabs.precision) + beat
+            tabs.paste(Note(utils.NOTE_VALUES['8'], utils.DRUMS['CHINA'], 1), pos)
+    return tabs
 
-def use_sweep(scale, key_note, size=3, dir='up', type=0):
-    melody = []
-    if size == 3:
-        pass
-    if size == 5:
-        pass
-    
-    pattern = MelodicPattern.MelodicPatternClass()
-    if type == 0:
-        pattern.apply([1, 4, 7, 11, 14, 17])
-    if type == 1:
-        pattern.apply([1, 3, 6, 9, 11, 14])
-    if type == 2:
-        pass
-
-def use_bend(note):
-    pass
+def generate_guitar(tabs):
+    # test
+    every_beat = tabs.precision // 2
+    for tact in range(tabs.tacts):
+        for beat in range(0, tabs.precision, every_beat):
+            pos = (tact * tabs.precision) + beat + 1
+            tabs.paste(Note(utils.NOTE_VALUES['4'], utils.pitch_from_values('F', 4), 1), pos)
+    return tabs
 
 if __name__ == '__main__':
 
-    
+    scale = SCALES['jewish']
+    key = 'B'
+    key_note = utils.pitch_from_values(key, octave=2)
 
-    scale1 = Scale.SCALES['jewish']
-    scale2 = Scale.SCALES['spanish']
-    key = 'F'
-    key_note = Key.note(key, 3)
+    drum_tabs = Tablature(tacts=8, precision=16)
+    guitar_tabs = Tablature(tacts=8, precision=16)
 
-    shred1 = use_shred(scale1, key_note)
-    shred2 = use_shred(scale1, key_note)
-    shred3 = use_shred(scale2, key_note)
+    drum_tabs = generate_drums(drum_tabs)
+    guitar_tabs = generate_guitar(guitar_tabs)
 
-    song = []
-    song = melody_in(song, use_bend(key_note))
+    #drum_tabs.print()
 
-    # song = melody_in(song, shred1)
-    # song = melody_in(song, shred2)
-    # song = melody_in(song, shred3)
-    # song = melody_in(song, shred1)
-    # song = melody_in(song, shred1)
-    # song = melody_in(song, shred2)
-    # song = melody_in(song, shred3)
-    # song = melody_in(song, shred1)
+    player = Player(140)
 
-    # song = melody_in(song, use_sweep(scale1, key_note))
+    player.create_channel('drums')
+    player.create_channel('guitar')
 
-    # for _ in range(40):
-    #     volume = 1
-    #     note = scale.get_note(key_note, 1)
-    #     song.append([note, 0.45, volume])
-    #     song.append([0, 0.05, volume])
-
-    player = Player.PlayerClass(140)
-    player.create_channel('piano')
-    player.play(song, 'piano')
+    player.play(drum_tabs, 'drums')
+    player.play(guitar_tabs, 'guitar')
+    player.sync()
