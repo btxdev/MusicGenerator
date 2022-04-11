@@ -10,10 +10,11 @@ class CreateMidiFile(object):
         self._mf.addTempo(0, 0, tempo)
 
     def add_note(self, channel, note, time):
-        volume = int(note.volume * 100)
-        self._mf.addNote(0, channel, note.pitch, time, note.value, volume)
+        volume = int(note.volume * 127)
+        self._mf.addNote(0, channel, note.pitch, time * 2, note.value, volume)
 
     def save(self, path):
-        path = str(Path(path, self._name).resolve())
+        path = str(Path(path, self._name + '.mid').resolve())
         with open(path, 'wb') as file:
             self._mf.writeFile(file)
+            print('file {} saved'.format(path))

@@ -31,15 +31,17 @@ class Tablature():
 
     def get_notes(self, tempo):
         output = []
-        beats_per_second = tempo / 60
+        beats_per_minute = tempo
+        beats_per_second = beats_per_minute / 60
         beat_duration = 1 / beats_per_second
         tact_duration = beat_duration * 4
         quant_duration = tact_duration / self.precision
-        for i in range(self.tabs):
+        for i in range(len(self.tabs)):
             for note in self.tabs[i]:
                 if not note.is_pause:
                     time = i * quant_duration
-                    output += (note, time)
+                    output.append((note, time))
+        return output
 
     def print(self):
         for notes in self.tabs:

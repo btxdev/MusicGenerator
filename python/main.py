@@ -10,7 +10,7 @@ from classes.player import Player
 from classes.note import Note
 from classes.scale import SCALES
 from classes.scale import Scale
-from python.classes.midi import CreateMidiFile
+from classes.midi import CreateMidiFile
 
 DEBUG = False
 SCRIPT_DIR = Path(__file__).parent.resolve()
@@ -42,14 +42,42 @@ def use_pattern(scale, key_note, pattern, pattern_shift=0):
         melody.append(pause_note(pause))
     return melody
 
-def generate_drums(tabs):
-    # cymbals
-    every_beat = tabs.precision // 4
-    for tact in range(tabs.tacts):
-        for beat in range(0, tabs.precision, every_beat):
-            pos = (tact * tabs.precision) + beat
-            tabs.paste(Note(utils.NOTE_VALUES['8'], utils.DRUMS['CHINA'], 1), pos)
+def generate_drums(type=0, tacts=2):
+
+    tabs = Tablature(tacts=tacts, precision=32)
+
+    if type == 0:
+        # cymbals
+        every_beat = tabs.precision // 4
+        for tact in range(tabs.tacts):
+            for beat in range(0, tabs.precision, every_beat):
+                pos = (tact * tabs.precision) + beat
+                tabs.paste(Note(utils.NOTE_VALUES['8'], utils.DRUMS['CHINA'], 1), pos)
+        # kick and snare
+        DRUM_PATTERNS = (
+            '*-------',
+            '----*---',
+            '*---*---',
+            '*---*-*-',
+            '*-*-----',
+            '*-*-*---',
+            '*-*---*-'
+        )
+        patterns_count = len(tabs.tabs) // len(DRUM_PATTERNS[0])
+        for j in range(patterns_count):
+            drum_pattern = random.choice(DRUM_PATTERNS)
+            for i in range(len(drum_pattern)):
+                if(drum_pattern[i] == '*'):
+                    pos = (i + j * len(DRUM_PATTERNS[0]))
+                    if pos % 16 == 0 and pos % 32 != 0:
+                        tabs.paste(Note(utils.NOTE_VALUES['32'], utils.DRUMS['SNARE'], 1), pos)
+                    else:
+                        tabs.paste(Note(utils.NOTE_VALUES['32'], utils.DRUMS['KICK'], 1), pos)
+                else:
+                    pass
+
     return tabs
+
 
 def generate_guitar(tabs):
     # test
@@ -57,7 +85,7 @@ def generate_guitar(tabs):
     for tact in range(tabs.tacts):
         for beat in range(0, tabs.precision, every_beat):
             pos = (tact * tabs.precision) + beat + 1
-            tabs.paste(Note(utils.NOTE_VALUES['4'], utils.pitch_from_values('F', 4), 1), pos)
+            tabs.paste(Note(utils.NOTE_VALUES['8'], utils.pitch_from_values('F', 4), 1), pos)
     return tabs
 
 def tablature_to_midi(tablature, tempo, midi, channel):
@@ -71,23 +99,13 @@ if __name__ == '__main__':
     scale = SCALES['jewish']
     key_note = utils.pitch_from_values(key, octave=2)
 
-    drum_tabs = Tablature(tacts=8, precision=16)
-    guitar_tabs = Tablature(tacts=8, precision=16)
-
-    drum_tabs = generate_drums(drum_tabs)
-    guitar_tabs = generate_guitar(guitar_tabs)
-
-    if DEBUG:
-        drum_tabs.print()
+    drum_tabs = generate_drums(type=0, tacts=8)
 
     # create midi files
     drum_midi = CreateMidiFile('Drums', tempo)
-    guitar_midi = CreateMidiFile('Guitar', tempo)
 
     # paste tablature
     tablature_to_midi(drum_tabs, tempo, drum_midi, 0)
-    tablature_to_midi(guitar_tabs, tempo, drum_midi, 1)
 
     # save files
     drum_midi.save(MIDI_OUTPUT_PATH)
-    guitar_midi.save(MIDI_OUTPUT_PATH)
