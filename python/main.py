@@ -46,7 +46,7 @@ def generate_drums(type=0, tacts=2):
 
     tabs = Tablature(tacts=tacts, precision=32)
 
-    if type == 0:
+    if type in (0, 1, 2):
         # cymbals
         every_beat = tabs.precision // 4
         for tact in range(tabs.tacts):
@@ -54,15 +54,29 @@ def generate_drums(type=0, tacts=2):
                 pos = (tact * tabs.precision) + beat
                 tabs.paste(Note(utils.NOTE_VALUES['8'], utils.DRUMS['CHINA'], 1), pos)
         # kick and snare
-        DRUM_PATTERNS = (
-            '*-------',
-            '----*---',
-            '*---*---',
-            '*---*-*-',
-            '*-*-----',
-            '*-*-*---',
-            '*-*---*-'
-        )
+        if type == 0:
+            DRUM_PATTERNS = (
+                '*-------',
+                '----*---',
+                '*---*---',
+                '*---*-*-',
+                '*-*-----',
+                '*-*-*---',
+                '*-*---*-'
+            )
+        if type == 1:
+            DRUM_PATTERNS = (
+                '*-*-*-*-',
+                '*-*-*---',
+                '*-*-----',
+                '*-------'
+            )
+        if type == 2:
+            DRUM_PATTERNS = (
+                '*---*---',
+                '----*---',
+                '*-*-----'
+            )
         patterns_count = len(tabs.tabs) // len(DRUM_PATTERNS[0])
         for j in range(patterns_count):
             drum_pattern = random.choice(DRUM_PATTERNS)
@@ -99,7 +113,7 @@ if __name__ == '__main__':
     scale = SCALES['jewish']
     key_note = utils.pitch_from_values(key, octave=2)
 
-    drum_tabs = generate_drums(type=0, tacts=8)
+    drum_tabs = generate_drums(type=2, tacts=8)
 
     # create midi files
     drum_midi = CreateMidiFile('Drums', tempo)
